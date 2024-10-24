@@ -1,0 +1,10 @@
+greetingWorkflow {
+  
+  step "Greet User" {
+    action "printMessage"
+    input {
+      message = "Hello, World!"
+    }
+  }
+  
+}
