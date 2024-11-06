@@ -1,0 +1,89 @@
+IDENTIFICATION DIVISION.
+PROGRAM-ID. LIBRARY-MANAGEMENT-SYSTEM.
+
+DATA DIVISION.
+WORKING-STORAGE SECTION.
+01 BOOK-ID           PIC 9(5).
+01 BOOK-TITLE        PIC X(20).
+01 BOOK-AUTHOR       PIC X(20).
+01 BOOK-AVAILABLE    PIC X(3).
+01 BOOK-COUNT        PIC 9(3) VALUE 0.
+01 BOOKS OCCURS 100 TIMES.
+   02 B-ID           PIC 9(5).
+   02 B-TITLE        PIC X(20).
+   02 B-AUTHOR       PIC X(20).
+   02 B-AVAILABLE    PIC X(3).
+
+01 USER-CHOICE       PIC 9 VALUE 0.
+
+PROCEDURE DIVISION.
+MAIN-PROCESS.
+    PERFORM MENU-OPTIONS
+    PERFORM UNTIL USER-CHOICE = 4
+       EVALUATE USER-CHOICE
+          WHEN 1
+             PERFORM ADD-BOOK
+          WHEN 2
+             PERFORM VIEW-BOOKS
+          WHEN 3
+             PERFORM SEARCH-BOOK
+          WHEN OTHER
+             DISPLAY "Invalid option. Please try again."
+       END-EVALUATE
+       PERFORM MENU-OPTIONS
+    END-PERFORM.
+    DISPLAY "Exiting the system.".
+    STOP RUN.
+
+MENU-OPTIONS.
+    DISPLAY "---- LIBRARY MANAGEMENT SYSTEM ----".
+    DISPLAY "1. Add Book".
+    DISPLAY "2. View Books".
+    DISPLAY "3. Search Book by ID".
+    DISPLAY "4. Exit".
+    DISPLAY "Choose an option: ".
+    ACCEPT USER-CHOICE.
+
+ADD-BOOK.
+    IF BOOK-COUNT = 100 THEN
+       DISPLAY "Book list is full."
+       EXIT PROGRAM
+    END-IF.
+    ADD 1 TO BOOK-COUNT.
+    DISPLAY "Enter Book ID: ".
+    ACCEPT BOOK-ID.
+    DISPLAY "Enter Book Title: ".
+    ACCEPT BOOK-TITLE.
+    DISPLAY "Enter Book Author: ".
+    ACCEPT BOOK-AUTHOR.
+    DISPLAY "Is the book available (Yes/No)? ".
+    ACCEPT BOOK-AVAILABLE.
+
+    MOVE BOOK-ID TO B-ID(BOOK-COUNT).
+    MOVE BOOK-TITLE TO B-TITLE(BOOK-COUNT).
+    MOVE BOOK-AUTHOR TO B-AUTHOR(BOOK-COUNT).
+    MOVE BOOK-AVAILABLE TO B-AVAILABLE(BOOK-COUNT).
+    DISPLAY "Book added successfully!".
+
+VIEW-BOOKS.
+    IF BOOK-COUNT = 0 THEN
+       DISPLAY "No books available."
+    ELSE
+       PERFORM VARYING BOOK-ID FROM 1 BY 1 UNTIL BOOK-ID > BOOK-COUNT
+          DISPLAY "ID: " B-ID(BOOK-ID) ", Title: " B-TITLE(BOOK-ID) ", Author: " B-AUTHOR(BOOK-ID) ", Available: " B-AVAILABLE(BOOK-ID)
+       END-PERFORM
+    END-IF.
+
+SEARCH-BOOK.
+    DISPLAY "Enter Book ID to search: ".
+    ACCEPT BOOK-ID.
+    MOVE 0 TO BOOK-COUNT.
+    PERFORM VARYING BOOK-ID FROM 1 BY 1 UNTIL BOOK-ID > BOOK-COUNT
+       IF BOOK-ID = B-ID(BOOK-ID) THEN
+          DISPLAY "Book Found: ID: " B-ID(BOOK-ID) ", Title: " B-TITLE(BOOK-ID) ", Author: " B-AUTHOR(BOOK-ID) ", Available: " B-AVAILABLE(BOOK-ID)
+          EXIT PERFORM
+       END-IF
+    END-PERFORM.
+    IF BOOK-ID NOT EQUAL TO B-ID THEN
+       DISPLAY "Book not found."
+    END-IF.
