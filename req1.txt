@@ -1,0 +1,5 @@
+Include inputs, expected outputs, and user actions.
+Keep the content consistent and easy to follow.
+Use simple and structured language.
+Describe each feature, function, or user flow clearly.
+Write features in a way that test cases can be generated from them.
